@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cronômetro de Suspense</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #0d0d0d, #000000);
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 50px;
+      color: #ff00ff;
+      text-shadow: 0 0 15px #ff00ff;
+      margin-top: 30px;
+    }
+
+    .timer {
+      font-size: 90px;
+      margin: 20px 0;
+      color: #00ffff;
+      text-shadow: 0 0 25px #00ffff;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 20px #00ffff; }
+      50% { text-shadow: 0 0 40px #00ffff; }
+    }
+
+    .controls, .section {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #111;
+      color: #00ffff;
+      border: 2px solid #00ffff;
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 8px #00ffff;
+    }
+
+    button:hover {
+      background-color: #00ffff;
+      color: #000;
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+    }
+
+    .message {
+      font-size: 24px;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #ffcc00;
+      margin-top: 15px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Cronômetro Escape Room</h1>
+  <div class="timer" id="timer">20:00</div>
+
+  <div class="message" id="message"></div>
+
+  <div class="section">
+    <button onclick="adjustTime(10)">+10s</button>
+    <button onclick="adjustTime(20)">+20s</button>
+    <button onclick="adjustTime(30)">+30s</button>
+    <button onclick="adjustTime(40)">+40s</button>
+    <button onclick="adjustTime(50)">+50s</button>
+    <button onclick="adjustTime(60)">+1min</button>
+  </div>
+
+  <div class="section">
+    <button onclick="adjustTime(-10)">-10s</button>
+    <button onclick="adjustTime(-20)">-20s</button>
+    <button onclick="adjustTime(-30)">-30s</button>
+    <button onclick="adjustTime(-40)">-40s</button>
+    <button onclick="adjustTime(-50)">-50s</button>
+    <button onclick="adjustTime(-60)">-1min</button>
+  </div>
+
+  <div class="controls">
+    <button onclick="toggleTimer()">▶ Iniciar / Pausar</button>
+    <button onclick="resetTimer()">⟳ Resetar</button>
+  </div>
+
+  <!-- Sons -->
+  <audio id="clickSound" src="audio/mouse-click-290204.mp3" preload="auto"></audio>
+  <audio id="upSound" src="audio/bell-172780.mp3" preload="auto"></audio>
+  <audio id="downSound" src="audio/alerte-346112.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="audio/suspense-tension-trailer-345353.mp3" preload="auto" loop></audio>
+
+  <script>
+    let initialTime = 20 * 60;
+    let timeLeft = initialTime;
+    let interval = null;
+
+    const timerDisplay = document.getElementById("timer");
+    const messageDisplay = document.getElementById("message");
+    const clickSound = document.getElementById("clickSound");
+    const upSound = document.getElementById("upSound");
+    const downSound = document.getElementById("downSound");
+    const bgMusic = document.getElementById("bgMusic");
+
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerDisplay.textContent = String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
+
+      // Música fica mais intensa abaixo de 60s
+      if (timeLeft <= 60) {
+        bgMusic.volume = 1.0;
+      } else {
+        bgMusic.volume = 0.4;
+      }
+    }
+
+    function showMessage(text) {
+      messageDisplay.textContent = text;
+      setTimeout(() => {
+        messageDisplay.textContent = "";
+      }, 2000);
+    }
+
+    function adjustTime(seconds) {
+      clickSound.currentTime = 0;
+      clickSound.play();
+
+      timeLeft += seconds;
+      if (timeLeft < 0) timeLeft = 0;
+
+      updateDisplay();
+
+      if (seconds > 0) {
+        upSound.play();
+        showMessage(`Tempo aumentado em ${seconds} segundos`);
+      } else {
+        downSound.play();
+        showMessage(`Tempo reduzido em ${Math.abs(seconds)} segundos`);
+      }
+    }
+
+    function toggleTimer() {
+      clickSound.play();
+      bgMusic.play();
+
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+        bgMusic.pause();
+      } else {
+        interval = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateDisplay();
+          } else {
+            clearInterval(interval);
+            interval = null;
+            showMessage("⏰ Tempo esgotado!");
+            bgMusic.pause();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clickSound.play();
+      clearInterval(interval);
+      interval = null;
+      timeLeft = initialTime;
+      updateDisplay();
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+      showMessage("⟳ Cronômetro resetado");
+    }
+
+    updateDisplay();
+  </script>
+
+  <a href="pag2.html" >pag2</a>
+  <a href="pag3.html" >pag2</a>
+  <a href="pag4.html" >pag2</a>
+  <a href="pag5.html" >pag2</a>
+</body>
+</html>
