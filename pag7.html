@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Caça Tecnológica - Respostas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Desafio Final - Caça Tecnológica</h2>
+  <p>Digite as respostas das 5 charadas:</p>
+
+  <label>1. Fórmula de soma em planilha:</label>
+  <input type="text" id="q1">
+
+  <label>2. Tag HTML de parágrafo:</label>
+  <input type="text" id="q2">
+
+  <label>3. Nome do elemento que guarda dados em um banco:</label>
+  <input type="text" id="q3">
+
+  <label>4. Função usada para condições lógicas:</label>
+  <input type="text" id="q4">
+
+  <label>5. Elemento básico de resolução de problemas:</label>
+  <input type="text" id="q5">
+
+  <button onclick="verificarRespostas()">Verificar</button>
+
+  <p id="mensagem" class="success"></p>
+
+  <script>
+    function verificarRespostas() {
+      const r1 = document.getElementById("q1").value.trim().toUpperCase();
+      const r2 = document.getElementById("q2").value.trim().toLowerCase();
+      const r3 = document.getElementById("q3").value.trim().toLowerCase();
+      const r4 = document.getElementById("q4").value.trim().toLowerCase();
+      const r5 = document.getElementById("q5").value.trim().toLowerCase();
+
+      const correta1 = r1 === "=SOMA(A1:A10)";
+      const correta2 = r2 === "<p>";
+      const correta3 = r3 === "tabela";
+      const correta4 = (r4 === "se" || r4 === "=se");
+      const correta5 = r5 === "algoritmo";
+
+      if (correta1 && correta2 && correta3 && correta4 && correta5) {
+        document.getElementById("mensagem").innerText = "🎉 Parabéns, você passou para a próxima fase!";
+      } else {
+        document.getElementById("mensagem").innerText = "❌ Alguma resposta está incorreta. Tente novamente!";
+      }
+    }
+  </script>
+
+</body>
+</html>
